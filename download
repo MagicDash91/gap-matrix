@@ -1,0 +1,7 @@
+.env
+data/pdfs/*.pdf
+data/index/
+data/texts/
+outputs/extraction_cache.jsonl
+__pycache__/
+.pytest_cache/

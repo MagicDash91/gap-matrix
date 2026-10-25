@@ -1,0 +1,10 @@
+# Tanpa LangChain / LlamaIndex / FAISS / SDK LLM — semua tahap RAG ditulis manual.
+requests>=2.31              # panggilan HTTP ke Groq / Gemini API
+sentence-transformers>=3.0  # embedding lokal (paraphrase-multilingual-mpnet-base-v2)
+numpy>=1.26                 # vector store + cosine similarity
+pypdf>=4.0                  # ekstraksi teks PDF
+pandas>=2.0
+openpyxl>=3.1
+tabulate>=0.9
+python-dotenv>=1.0
+pytest>=8.0

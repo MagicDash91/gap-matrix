@@ -1,0 +1,248 @@
+{
+ "_catatan": "Matriks referensi hasil kurasi manual dari abstrak dan teks lengkap yang dapat diakses (Oktober 2026; P19–P20 dari PDF yang dilampirkan). Kolom mengikuti template PPT: Problem, Metode, Dataset, Temuan, Keterbatasan, Future work. Dipakai sebagai acuan validasi keluaran pipeline (scripts/compare.py) dan sebagai matriks final.",
+ "rows": {
+  "P01": {
+   "problem": "Titik kegagalan sistem RAG dalam praktik rekayasa belum didokumentasikan secara empiris.",
+   "metode": "Laporan pengalaman dari tiga studi kasus (Cognitive Reviewer, AI Tutor, BioASQ); identifikasi failure point dan pelajaran rekayasa.",
+   "dataset": "BioASQ: 4.017 dokumen dan 1.000 pertanyaan; dua studi kasus lain bersifat rahasia.",
+   "temuan": "Tujuh failure point: konten tidak ada, dokumen terlewat di peringkat atas, tidak masuk konteks, tidak terekstraksi, format salah, spesifisitas salah, jawaban tidak lengkap; validasi RAG hanya layak saat operasi.",
+   "keterbatasan": "Tanpa perbandingan kuantitatif antar-desain; dua studi kasus tidak dapat diungkap; penilai BioASQ bukan pakar.",
+   "future_work": "Evaluasi chunking dan embedding, perbandingan RAG vs fine-tuning, serta metode pengujian dan monitoring RAG."
+  },
+  "P02": {
+   "problem": "Chatbot RAG enterprise sulit dibuat aman, akurat, dan hemat biaya karena banyak komponen, kontrol akses, dan data sensitif.",
+   "metode": "Kerangka FACTS (Freshness, Architectures, Cost, Testing, Security) dan 15 control point RAG; hybrid search, reranking, guardrail NeMo; Llama3-70B dibandingkan GPT-4.",
+   "dataset": "Tiga chatbot internal NVIDIA: NVInfo (~500 juta dokumen), NVHelp IT/HR (~2 ribu dokumen), Scout (~4 ribu dokumen); ~245 kueri uji NVHelp.",
+   "temuan": "Metadata, chunking, rephrasal kueri, dan reranking paling berpengaruh; hybrid search membantu entitas bernama; Llama3-70B setara GPT-4 pada beberapa aspek kualitas.",
+   "keterbatasan": "Data internal dan satu set evaluasi (~245 kueri); angka kuantitatif terbatas; LLM-as-judge berisiko bias.",
+   "future_work": "Arsitektur agentic untuk pertanyaan kompleks, auto-ML untuk control point, evaluasi percakapan, dan continual learning."
+  },
+  "P03": {
+   "problem": "Belum ada sintesis sistematis tentang penerapan RAG + LLM untuk manajemen pengetahuan dan otomasi dokumen enterprise.",
+   "metode": "Systematic literature review dengan 9 pertanyaan riset; penilaian kualitas 8 butir; dual coding.",
+   "dataset": "63 studi terpilih dari >500 kandidat (IEEE, ACM, ScienceDirect, Springer, Wiley, Google Scholar), 2015–Juni 2025.",
+   "temuan": "Cloud 66,2%, on-premise 19,5%; dense retrieval 80,5%; evaluasi pengguna/human judgment 19,5%; studi kasus nyata ~13%; multimodal/multibahasa ~5%; kesenjangan 'lab-to-market'.",
+   "keterbatasan": "Hanya artikel berbahasa Inggris; literatur abu-abu dikecualikan; heterogenitas metrik menghalangi meta-analisis.",
+   "future_work": "Retrieval yang menjaga privasi, latensi rendah, evaluasi holistik dengan KPI bisnis, RAG multibahasa, dan pembaruan indeks berkelanjutan."
+  },
+  "P04": {
+   "problem": "RAG standar lemah pada data enterprise terstruktur/tabular: chunk terfragmentasi, tabel kehilangan relasi baris-kolom, tanpa reranking.",
+   "metode": "Hybrid BM25 + dense (all-mpnet-base-v2, bobot 0,4/0,6), tabel diindeks per baris, metadata NER, cross-encoder reranking, query rewriting, prompt bersitasi, memori percakapan; Mistral-7B/LLaMA via Groq.",
+   "dataset": "Kebijakan HR dan laporan perusahaan (teks + tabel) dari sumber publik, ditambah data.gov.in dan UCI Adult.",
+   "temuan": "Dibanding naive RAG: Precision@5 75%→90%, Recall@5 74%→87%, MRR 0,69→0,85; faithfulness 3,0→4,6 (skala 1–5).",
+   "keterbatasan": "Pembaruan korpus memerlukan reindeks penuh; tabel bertingkat kehilangan konteks; ukuran sampel evaluasi tidak dilaporkan.",
+   "future_work": "Indeks inkremental, model pemahaman tabel (TAPAS), umpan balik implisit, agen ReAct, dan dokumen multimodal."
+  },
+  "P05": {
+   "problem": "Tim layanan pelanggan sulit menemukan tiket lama yang relevan; RAG berbasis teks datar mengabaikan struktur tiket dan relasi antar-tiket.",
+   "metode": "Knowledge graph dari tiket (pohon section + relasi eksplisit/implisit), embedding E5 di Qdrant, kueri Cypher di Neo4j buatan GPT-4, fallback ke retrieval teks.",
+   "dataset": "Set emas kueri, tiket dukungan, dan solusi otoritatif di LinkedIn (jumlah tidak dilaporkan).",
+   "temuan": "MRR 0,522→0,927; BLEU 0,057→0,377; di produksi ±6 bulan median waktu penyelesaian tiket turun 28,6% (7→5 jam).",
+   "keterbatasan": "Ukuran dataset dan uji signifikansi tidak dilaporkan; template graf dibuat manual; keandalan parsing LLM tidak dievaluasi terpisah.",
+   "future_work": "Otomasi template graf, pembaruan graf dinamis berbasis kueri, dan penerapan di luar customer service."
+  },
+  "P06": {
+   "problem": "Pengetahuan penyelesaian masalah tersebar di tiket JIRA, komentar, dan PR GitHub sehingga akar masalah serupa sulit dicocokkan.",
+   "metode": "Embedding per jenis artefak (all-MiniLM-L6-v2, multi-qa-MPNet), FAISS HNSW, re-ranking kemiripan, LLM menghasilkan langkah penyelesaian dengan tautan ke PR terkait.",
+   "dataset": "±15.000 tiket JIRA, 6.500 PR GitHub, 3.200 tautan tiket-PR; 500 isu uji.",
+   "temuan": "Recall@5 82%, MRR 0,78; factual consistency 84%; waktu penyelesaian rata-rata 18,5→10,2 jam; 68% saran diterima developer.",
+   "keterbatasan": "Halusinasi saat LLM melampaui bukti; solusi lama bisa usang; LLM tidak disebutkan; tanpa baseline dan uji statistik.",
+   "future_work": "Lapisan verifikasi retrieval, hybrid dense-sparse, continual learning, dan embedding berbasis graf."
+  },
+  "P07": {
+   "problem": "IT support bersifat diagnostik; RAG multi-turn standar tidak melacak hipotesis dan bukti yang terkumpul.",
+   "metode": "DQA: retrieval tiket serupa yang diklaster per akar masalah, state diagnostik (bobot hipotesis), kebijakan aksi (bertanya balik/investigasi/resolusi), dan query rewriting percakapan.",
+   "dataset": "150 interaksi IT support enterprise teranonimkan (mayoritas masalah izin akses); pengguna disimulasikan LLM.",
+   "temuan": "Tingkat keberhasilan 41,3%→78,7%; rata-rata giliran 8,43→3,93; state diagnostik menyumbang +24,9 poin.",
+   "keterbatasan": "Pengguna disimulasikan, bukan deployment nyata; satu domain IT support; resolusi yang buruk dokumentasinya menimbulkan noise.",
+   "future_work": "Menguji generalisasi ke domain diagnostik lain."
+  },
+  "P08": {
+   "problem": "Dokumen standar telekomunikasi (3GPP) kompleks dan cepat berubah sehingga RAG umum kurang akurat.",
+   "metode": "Telco-RAG: query refinement dengan glosarium 3GPP, kandidat jawaban untuk retrieval ulang, neural router untuk memilih seri dokumen, FAISS; GPT-3.5 + text-embedding-3-large.",
+   "dataset": "2.000 MCQ 3GPP Rel. 18 (optimasi), 1.840 MCQ TeleQnA (evaluasi), 30.000 pertanyaan sintetis untuk router.",
+   "temuan": "Akurasi rata-rata +6,6% dibanding benchmark RAG dan +14,45% dibanding GPT-3.5 tanpa RAG; chunk 125 token lebih baik dari 500; RAM turun 45%.",
+   "keterbatasan": "Evaluasi berbentuk pilihan ganda, tidak mencerminkan pertanyaan pengguna nyata; akurasi turun bila konteks >1.500 token.",
+   "future_work": "Merilis Telco-RAG sebagai chatbot open-source."
+  },
+  "P09": {
+   "problem": "LLM umum tidak andal untuk pertanyaan standar telko; fine-tuning mahal dan cepat usang.",
+   "metode": "Telco-oRAG: query refinement + glosarium, hybrid retrieval web + 3GPP dua putaran, neural routing ke 18 seri spesifikasi, prompt berbentuk dialog.",
+   "dataset": "TeleQnA (10.000 MCQ), 2.000 MCQ Rel. 18, 500 pertanyaan leksikon, QnA terbuka dinilai LLM-as-judge.",
+   "temuan": "Akurasi naik hingga 17,6% dibanding LLM tanpa RAG; QnA terbuka naik hingga 42,8 poin; RAM median turun 45%.",
+   "keterbatasan": "Router keliru pada seri yang mirip; bergantung pada web search; satu kueri sekaligus.",
+   "future_work": "Perluasan ke standar lain (mis. ITU) dan analisis latensi-kinerja."
+  },
+  "P10": {
+   "problem": "Retrieval atas spesifikasi teknis 3GPP sulit karena dokumen mencampur teks dan tabel.",
+   "metode": "QA berbasis RAG dengan GPT-4; membandingkan BM25, DPR, dan Dense Hierarchical Retrieval (DHR) yang di-fine-tune pada tingkat dokumen dan passage.",
+   "dataset": "Telco-DPR: korpus hibrida teks + tabel 3GPP dengan pasangan QA sintetis.",
+   "temuan": "DHR unggul dengan Top-10 accuracy 86,2%; akurasi jawaban naik 14% dibanding benchmark sebelumnya.",
+   "keterbatasan": "Pertanyaan evaluasi sintetis; satu jenis dokumen (standar 3GPP).",
+   "future_work": "Tidak dinyatakan."
+  },
+  "P11": {
+   "problem": "Operator sistem cyber-physical harus mencari prosedur troubleshooting di manual panjang; gejala tumpang tindih membuat pencarian lambat.",
+   "metode": "RAG lokal (Ollama, LangChain, Chroma), top-4 chunk; Qwen 7B, Mistral 7B, Llama 3B; variasi ukuran chunk dan top-p; dinilai juri LLM.",
+   "dataset": "Manual troubleshooting Fincantieri (>100 manual); 25 topik gejala-prosedur, 100 pertanyaan dalam 4 variasi.",
+   "temuan": "Chunk benar masuk top-4 hanya 41% (pertanyaan akurat) dan 19% (tidak akurat); Qwen memberi langkah lengkap pada 64% kasus terbaik.",
+   "keterbatasan": "Hanya 25 topik; tinjauan kualitatif oleh penulis, bukan praktisi; satu konteks industri.",
+   "future_work": "Strategi troubleshooting percakapan, instruksi multimodal, dan penulisan ulang pertanyaan otomatis."
+  },
+  "P12": {
+   "problem": "Teknisi dan karyawan sulit mencari detail perbaikan teknis dan regulasi internal perusahaan.",
+   "metode": "Sistem manajemen pengetahuan industri interaktif berbasis RAG + LLM untuk layanan teknis dan pencarian regulasi internal.",
+   "dataset": "Dokumen layanan perbaikan teknis dan regulasi internal perusahaan (mis. perjalanan dinas, cuti).",
+   "temuan": "Layanan teknis: MRR 88%, recall 85%, mAP 75%; regulasi internal: recall 91,62%, MRR 97,97%, mAP 91,12%.",
+   "keterbatasan": "Detail model, ukuran korpus, dan evaluasi pengguna tidak tersedia pada abstrak.",
+   "future_work": "Tidak dinyatakan pada abstrak."
+  },
+  "P13": {
+   "problem": "Manajemen ketidaksesuaian (non-conformity) kualitas manufaktur memerlukan diagnosis cacat yang cepat.",
+   "metode": "Sistem RAG lanjutan dengan pre- dan post-processing khusus; model GPT OpenAI.",
+   "dataset": "Sumber bibliografi khusus proses manufaktur ubin keramik.",
+   "temuan": "Efektif mengidentifikasi penyebab cacat dan memberi solusi; mempercepat troubleshooting (dilaporkan kualitatif).",
+   "keterbatasan": "Tanpa metrik kuantitatif pada abstrak; satu jenis industri; bergantung pada model tertutup.",
+   "future_work": "Tidak dinyatakan pada abstrak."
+  },
+  "P14": {
+   "problem": "Naive RAG mencapai batas ketika korpus regulasi membesar dan pertanyaan makin kompleks.",
+   "metode": "Evolusi pipeline produksi: naive RAG → hybrid retrieval + reranking → agentic function-calling → multi-agen dengan perencanaan (PEA-CAE, eskalasi bertahap berbasis biaya).",
+   "dataset": "Korpus produksi dokumen regulasi dan rate case Ontario Power Generation (ukuran tidak dilaporkan).",
+   "temuan": "Context engineering lebih praktis dan ekonomis dibanding fine-tuning untuk korpus yang terus berubah; akuisisi bukti iteratif lebih baik dari retrieval sekali jalan (kualitatif).",
+   "keterbatasan": "Tanpa angka kuantitatif pada abstrak; satu organisasi.",
+   "future_work": "Tidak dinyatakan pada abstrak."
+  },
+  "P15": {
+   "problem": "Dokumen aturan organisasi tersebar dan tidak terstruktur sehingga ASN sulit mendapatkan informasi akurat dengan cepat.",
+   "metode": "Chatbot WhatsApp (gateway + Socket.IO) terintegrasi RAG dengan model OpenAI; dashboard admin untuk mengelola dokumen.",
+   "dataset": "Dokumen aturan organisasi (ukuran tidak dilaporkan).",
+   "temuan": "F1 rata-rata 0,80; BLEU 0,54; ROUGE-L F1 0,81.",
+   "keterbatasan": "Ukuran data uji, model embedding, dan evaluasi halusinasi tidak dilaporkan; bergantung API berbayar.",
+   "future_work": "Tidak dinyatakan."
+  },
+  "P16": {
+   "problem": "PLN menangani banyak keluhan pelanggan; LLM umum berisiko memberi jawaban yang terdengar benar tetapi tidak akurat.",
+   "metode": "Normalisasi bahasa informal, anonimisasi PII, all-MiniLM-L6-v2 + FAISS, LLM lokal via Ollama (LangChain), klarifikasi dan fallback ke petugas manusia.",
+   "dataset": "Rekam keluhan pelanggan PLN beberapa tahun (teranonimkan); 5 kueri uji representatif.",
+   "temuan": "BLEU-4 46,5 vs 31,2 (LLM saja); 92% respons membantu; klarifikasi pada 87% kueri tidak lengkap; fallback terpicu tepat.",
+   "keterbatasan": "Hanya 5 kueri uji; keluhan spesifik wilayah terpencil menghasilkan jawaban umum; LLM tidak disebutkan.",
+   "future_work": "Perluasan data (kebijakan terbaru, log teknisi lapangan), umpan balik real-time, input suara/gambar, integrasi PLN Mobile, uji A/B."
+  },
+  "P17": {
+   "problem": "Chatbot domain khusus berhalusinasi karena pemilihan dan pemeringkatan dokumen konteks yang keliru.",
+   "metode": "Membandingkan retrieval leksikal (TF-IDF), semantik (dense + FAISS), dan hybrid (RRF) pada chatbot dukungan produk.",
+   "dataset": "Dokumentasi teknis, FAQ, dan panduan produk Orion Schematics (jumlah tidak dilaporkan).",
+   "temuan": "TF-IDF terbaik: Recall@1 0,625, MRR 0,723; hybrid Recall@5 0,825 vs semantik 0,625.",
+   "keterbatasan": "Satu studi kasus; jumlah kueri tidak dilaporkan; BM25 tidak diuji; kualitas generasi dan halusinasi tidak diukur.",
+   "future_work": "Optimasi reranking dan strategi retrieval adaptif berdasarkan jenis pertanyaan."
+  },
+  "P18": {
+   "problem": "Layanan pelanggan perusahaan bergantung pada pimpinan dan lambat; chatbot LLM berhalusinasi.",
+   "metode": "RAG dengan LangChain, ChromaDB, dan LLM lokal mistral:instruct; pengembangan Agile empat sprint; widget chat + dashboard admin.",
+   "dataset": "Tidak dilaporkan.",
+   "temuan": "Akurasi respons meningkat dan waktu respons lebih cepat (dilaporkan kualitatif, tanpa angka).",
+   "keterbatasan": "Tanpa metrik kuantitatif dan detail dataset.",
+   "future_work": "Tidak dinyatakan."
+  },
+  "P19": {
+   "problem": "Menyetel chatbot RAG sulit karena banyak parameter yang saling bergantung; evaluasi sistematis dan reproducible jarang tersedia untuk asisten internal yang dipakai staf non-teknis.",
+   "metode": "Perangkat CLI Python berbasis LangChain dengan konfigurasi per proyek (basis pengetahuan + system prompt); perintah chat dan evaluate; metrik BLEU, ROUGE-L, semantic similarity, dan LLM-as-judge (context relevance, response relevance, response faithfulness); gemini-embedding-001 + gemini-2.0-flash; prompt meminta model menjawab tidak tahu bila konteks tidak cukup.",
+   "dataset": "Dokumentasi aplikasi Laredo; 4 pertanyaan dengan jawaban rujukan; 6 konfigurasi parameter.",
+   "temuan": "k = 3 dokumen memberi skor terbaik (BLEU 53, ROUGE-L 80, SS 96, CR/RR/RF 5,00); chunk_size 4.000 menurunkan BLEU menjadi 44 dan response relevance menjadi 3,50 dibanding chunk_size 1.000 (BLEU 55, RR 4,50).",
+   "keterbatasan": "Contoh ilustratif, bukan evaluasi sistematis (dinyatakan penulis); terikat LangChain dan LangSmith; tanpa antarmuka web; biaya LLM-as-judge tinggi pada basis pengetahuan besar.",
+   "future_work": "Benchmark kuantitatif terhadap framework RAG lain, studi ablasi parameter, serta uji beban pada beragam basis pengetahuan dan LLM."
+  },
+  "P20": {
+   "problem": "Data bangunan heterogen (gambar, tabel, teks) dan tidak terstandar sehingga 60–80% waktu proyek habis untuk persiapan data; ekstraksi informasi masih manual.",
+   "metode": "Pipeline RAG domain-adapted: prosesor gambar dengan prompt domain untuk LLM multimodal, prosesor tabel (klasifikasi sebelum ekstraksi), chunk 1.000 token + ringkasan dokumen; 256 konfigurasi (4 LLM, 2 embedding, 8 chunking, similarity/MMR, dengan/tanpa cross-encoder reranker); integrasi MCP untuk membangun model semantik Brick.",
+   "dataset": "Dokumen 13 gedung kantor/laboratorium LBNL (dibangun 1962–2024): 30 gambar dan 14 tabel dengan tiga tingkat kesulitan; QA sintetis dari Gemini-2.5-pro; 15.360 run evaluasi.",
+   "temuan": "Coverage dan structural preservation naik ±30% dibanding baseline; skor keseluruhan tabel (penilai AI) 2,70→4,53; Gemini Embedding 001 + MMR + cross-encoder reranking paling seimbang; latensi 5–20 detik; pembuatan model Brick turun dari hitungan hari menjadi menit.",
+   "keterbatasan": "Satu kampus dan satu zona iklim; tidak dapat membaca CAD (DWG/DXF); evaluasi RAG memakai QA sintetis; akurasi turun pada pindaian buruk dan diagram padat.",
+   "future_work": "Dukungan CAD melalui MCP, fine-tuning domain bangunan, integrasi langsung dengan BAS/FMS, alur kerja agentic, dan dataset benchmark standar."
+  }
+ },
+ "aspects": {
+  "id_lowres": [
+   "P15",
+   "P16",
+   "P17",
+   "P18"
+  ],
+  "telco": [
+   "P08",
+   "P09",
+   "P10"
+  ],
+  "tiket": [
+   "P05",
+   "P06",
+   "P07",
+   "P11",
+   "P13",
+   "P16"
+  ],
+  "sop": [
+   "P02",
+   "P04",
+   "P11",
+   "P12",
+   "P14",
+   "P15",
+   "P19"
+  ],
+  "hybrid": [
+   "P02",
+   "P04",
+   "P14",
+   "P17"
+  ],
+  "rerank": [
+   "P02",
+   "P04",
+   "P06",
+   "P14",
+   "P20"
+  ],
+  "graph": [
+   "P05"
+  ],
+  "multiturn": [
+   "P04",
+   "P07",
+   "P09",
+   "P14",
+   "P16",
+   "P20"
+  ],
+  "sitasi": [
+   "P04",
+   "P06"
+  ],
+  "halusinasi": [
+   "P04",
+   "P06",
+   "P19",
+   "P20"
+  ],
+  "eskalasi": [
+   "P07",
+   "P16",
+   "P19"
+  ],
+  "open_local": [
+   "P02",
+   "P04",
+   "P11",
+   "P16",
+   "P18",
+   "P20"
+  ],
+  "produksi": [
+   "P02",
+   "P05",
+   "P06",
+   "P14"
+  ]
+ }
+}

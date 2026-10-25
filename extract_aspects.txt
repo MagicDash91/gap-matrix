@@ -1,0 +1,13 @@
+Anda menilai cakupan aspek riset pada sebuah paper dengan topik: {domain}.
+
+Paper: {title} ({authors}, {year})
+
+Untuk SETIAP aspek di bawah, jawab true/false berdasarkan KONTEKS saja (bukan asumsi), dan beri bukti singkat (maks. 15 kata) bila true.
+ASPEK:
+{aspects}
+
+Balas dengan SATU objek JSON saja, kunci = kode aspek:
+{{"<kode>": {{"present": true, "evidence": "..."}}, ...}}
+
+KONTEKS:
+{context}

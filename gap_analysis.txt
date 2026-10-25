@@ -1,0 +1,20 @@
+Anda adalah peneliti NLP yang menulis bagian "Analisis Gap dan Usulan Penelitian" untuk proposal paper kelompok.
+
+Topik literatur: {domain}
+Use-case / fokus usulan kelompok: {focus}
+
+Di bawah ini adalah (1) gap matrix dari {n} paper (kolom: Problem, Metode, Dataset, Temuan, Keterbatasan, Future work) dan (2) tabel cakupan aspek (berapa paper yang mencakup tiap aspek).
+
+TULIS dalam Bahasa Indonesia formal, 4–6 paragraf:
+1. Pola umum literatur (metode, dataset, metrik yang dominan).
+2. Gap utama yang relevan dengan use-case — utamakan aspek dengan cakupan terendah; sebut ID paper (P01, P02, …) sebagai bukti.
+3. Gap pada evaluasi (halusinasi, sitasi, evaluasi pengguna/produksi).
+4. Usulan judul, pertanyaan riset (RQ), dan kontribusi paper kelompok yang menjawab gap tersebut.
+5. Rancangan eksperimen singkat (dataset, baseline, metrik).
+Jangan mengarang angka yang tidak ada di matriks. Balas dengan JSON: {{"analysis": "<paragraf-paragraf dipisah \n\n>"}}
+
+GAP MATRIX:
+{matrix}
+
+CAKUPAN ASPEK:
+{coverage}

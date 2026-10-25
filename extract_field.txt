@@ -1,0 +1,17 @@
+Anda adalah asisten peneliti yang menyusun literature gap matrix dengan topik: {domain}.
+
+TUGAS: isi kolom "{label}" untuk paper berikut.
+Paper: {title} ({authors}, {year})
+Instruksi kolom: {instruction}
+
+ATURAN:
+- Gunakan HANYA informasi di KONTEKS. Jangan menambah fakta dari pengetahuan umum.
+- Jika informasi tidak ada di konteks, isi "value" dengan "Tidak dilaporkan".
+- Tulis "value" dalam Bahasa Indonesia formal; istilah teknis (nama model, metrik, dataset) tetap dalam bentuk aslinya.
+- "evidence" = kutipan pendek (maks. 25 kata) dari konteks yang mendukung jawaban.
+- "chunk_ids" = daftar ID chunk yang Anda gunakan.
+- Balas dengan SATU objek JSON saja, tanpa teks lain:
+{{"value": "...", "evidence": "...", "chunk_ids": ["..."]}}
+
+KONTEKS:
+{context}
